@@ -7,7 +7,8 @@ A React + Vite + TypeScript dashboard for a two-wheel balancing robot. Tailwind 
 Use Node.js 24.15+ in the 24.x LTS release line and npm. See LOCAL_SETUP.md for local Codex setup.
 
 ```sh
-cd balancelab
+# From the outer two-wheel-balancing-edu-kit repository root:
+cd balancedlab/BalanceLab-local-codex/balancelab
 npm ci
 npm run dev
 ```
@@ -106,4 +107,6 @@ New components include `LearningModeSelector`, `StudentDashboard`, `StudentContr
 
 ## Verification
 
-Production build, automated core tests and DOM interaction tests run in the managed environment. Browser visual QA was unavailable because the managed browser-control tool was not exposed; responsive behavior is implemented with CSS breakpoints but has not been visually verified here.
+Local verification on 2026-11-17 passed: locked dependency installation, 13 core/provider/education tests, 4 DOM integration tests, and the production type-check/build. Play, Learn and Engineer overview layouts were inspected in a browser at 1440×900 and 768×1024. Explicit PID application, gain continuity across modes, and digital-twin response to a simulated push were exercised. No browser console warnings/errors were captured in those flows. No lint script currently exists.
+
+Real ESP32 networking, firmware and physical safety remain unverified. Other pages, full keyboard/accessibility behavior, real tablet touch input, download contents and production preview still need manual checks. See the outer repository's [development report](../../../docs/development.md) and [roadmap](../../../docs/roadmap.md) for the full baseline and planned work. Use Git from that outer root: this imported application retains a separate nested Git history.

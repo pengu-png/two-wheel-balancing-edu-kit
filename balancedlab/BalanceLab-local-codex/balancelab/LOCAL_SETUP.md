@@ -1,49 +1,43 @@
-# Open BalanceLab in local Codex
+# Local BalanceLab setup
 
-This is the complete BalanceLab source from published version 2, based on commit `91fd4c20ffcc5814468b3c80ce44ef3f6d8287c3`, with a small local migration commit for setup instructions and scripts. It includes Git history, the React application, lockfile and all tests. The hosted application has not been changed by this export.
+Open the outer `two-wheel-balancing-edu-kit` folder as your workspace. The application lives at `balancedlab/BalanceLab-local-codex/balancelab/`. This folder retains a separate imported `.git` history with no remote; run all Git commands from the outer root, where the GitHub remote is configured. Do not delete either history.
 
-## 1. Extract and open
+## Prerequisites
 
-Extract `BalanceLab-local-codex.zip` into a folder you own, such as your normal Projects folder. Open the extracted **balancelab** folder as a local project in the Codex desktop app. If using the Codex CLI, open a terminal in that folder and run `codex`.
+Use Node.js 24 LTS, at least 24.15.0 in the 24.x line, with npm. `.nvmrc` selects Node 24. Verify `node --version` and `npm --version`. If PowerShell blocks the npm script shim, use `npm.cmd`; if npm is absent, install Node with npm and reopen your terminal. No API keys, backend, Site account or environment variables are needed.
 
-The directory you open must contain `package.json`, `src/`, `tests/`, and `AGENTS.md`. No ChatGPT Sites account, API keys, backend or environment variables are needed for local development.
+The 2026-11-17 Codex session had bundled Node 24.22.1 but no npm on PATH. Checks used temporary npm 11.6.2 downloaded from the npm registry. See the outer [development report](../../../docs/development.md) for that fallback and its limits; use a normal Node/npm installation for durable development.
 
-## 2. Install Node.js and dependencies
+## Start and validate
 
-Use a current **Node.js 24 LTS** release, at least 24.15.0. The existing locked jsdom dependency needs this newer version; older Node 22 releases listed in the original cloud README are not sufficient. A `.nvmrc` is provided if you use nvm (`nvm install` then `nvm use` inside the folder). Windows users can install Node.js 24 LTS normally and use PowerShell or a terminal in Codex.
+From the outer root:
 
-Run these commands inside the extracted `balancelab` folder:
-
-```sh
-node --version
+```powershell
+Set-Location balancedlab/BalanceLab-local-codex/balancelab
 npm ci
-npm run dev
+npm run dev -- --strictPort
 ```
 
-Open the URL printed by Vite, normally `http://127.0.0.1:5173`. The app starts in Play Mode with simulated telemetry. Learn and Engineer remain accessible through the mode selector. The dev and preview scripts bind to the local computer by default.
+Open `http://127.0.0.1:5173/`. The app starts in Play with simulated telemetry; Learn and Engineer share the same running robot state. Ctrl+C stops the server. Keep the dev server on loopback. Network access is needed to install dependencies; runtime assets are bundled locally.
 
-`node_modules` and generated build files are intentionally excluded from the download. `npm ci` installs the correct dependencies for your operating system from the included lockfile. Network access is required for this first installation; runtime assets are bundled locally.
-
-## 3. Verify and build
+In another terminal inside this application:
 
 ```sh
 npm test
 npm run build
-npm run preview
+npm run preview -- --strictPort
 ```
 
-The production output is `dist/`. The test command includes both core calculations/provider tests and DOM integration tests; there are 17 tests. These checks do not replace browser visual or real-hardware verification.
+The existing 17 tests and production build passed locally on 2026-11-17. No lint script exists. Preview serves `dist/` on loopback, normally port 4173; its entry point and built JavaScript returned HTTP 200 in a smoke check. Interactive production-browser testing remains outstanding. See the development report for desktop/tablet inspection and outstanding manual checks.
 
-## 4. Continue with Codex
+## Recordings and hardware
 
-Suggested first message:
+Recordings live in localStorage per browser origin. Port changes, `localhost` versus `127.0.0.1`, and preview versus development have separate storage. Export important data before changing origin or clearing storage. The source migration does not copy recordings from the original hosted Site.
 
-> Read AGENTS.md, HANDOFF.md and README.md. This is the existing BalanceLab project. Run the tests and build, then help me continue development locally while preserving Play, Learn and Engineer modes and the shared robot state. Keep work local unless I explicitly request deployment.
+The existing ESP32 adapter is `src/lib/providers.ts`; the contract is in `src/lib/types.ts` and README.md. Configure the real endpoint in Settings only when ready for supervised hardware validation. The default `wss://robot.local/ws` is an example, not a working connection guarantee. HTTP local pages can use `ws://`; HTTPS pages require `wss://`. Simulation pushes, live confirmation, acknowledgements, freshness and gain limits must remain intact. Independent physical stops and firmware watchdogs are required.
 
-The package contains its Git history, including the original two implementation commits. The cloud Git remote has been removed from this local copy. You may add your own GitHub or other remote later. `.openai/hosting.json` is retained as non-secret source metadata for the existing Site; local `dev`, `test`, `build` and `preview` commands do not use it or publish anything.
+`.openai/hosting.json` is non-secret original Site identity metadata. Running local commands does not publish or modify that Site. Do not push or deploy without an explicit request.
 
-## 5. Experiment recordings and hardware
+## Continue development
 
-Experiment recordings are stored in each browser origin's localStorage. The project archive contains source code, not recordings from your browser. Existing online recordings stay at the hosted URL; use the app's CSV export to retain their telemetry. The local app starts with its own browser storage.
-
-The ESP32 WebSocket adapter is `src/lib/providers.ts`, with the schema in `src/lib/types.ts`. Set your device URL in Settings. An HTTP local frontend can use `ws://` on the same network; an HTTPS frontend needs `wss://`. There is no connected physical robot in this export. Simulation-only push actions, explicit live confirmations, firmware acknowledgements, configured gain limits and independent physical safety requirements remain in place.
+Read the outer AGENTS.md, this folder's AGENTS.md, README.md and HANDOFF.md. Use short-lived `codex/<task>` branches from a reviewed baseline. See [the roadmap](../../../docs/roadmap.md) for completed features, current placeholders and next priorities. Review the outer Git diff and run tests/build before requesting review.
