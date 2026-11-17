@@ -1,0 +1,12 @@
+import {registerHooks} from 'node:module';
+import {JSDOM} from 'jsdom';
+registerHooks({load(url,context,next){if(url.endsWith('.css'))return {format:'module',source:'export default {};',shortCircuit:true};return next(url,context);}});
+const dom=new JSDOM('<!doctype html><html><body><div id="root"></div></body></html>',{url:'http://localhost',pretendToBeVisual:true});
+for(const key of ['window','document','navigator','HTMLElement','HTMLInputElement','Event','MouseEvent','KeyboardEvent','InputEvent','localStorage','getComputedStyle'])Object.defineProperty(globalThis,key,{configurable:true,value:key==='getComputedStyle'?dom.window.getComputedStyle.bind(dom.window):dom.window[key]});
+globalThis.IS_REACT_ACT_ENVIRONMENT=true;
+globalThis.requestAnimationFrame=callback=>setTimeout(()=>callback(Date.now()),0);
+globalThis.cancelAnimationFrame=clearTimeout;
+window.matchMedia=()=>({matches:false,addListener(){},removeListener(){},addEventListener(){},removeEventListener(){}});
+HTMLElement.prototype.scrollIntoView=function(){};
+HTMLElement.prototype.getBoundingClientRect=function(){return {x:0,y:0,left:0,top:0,right:800,bottom:300,width:800,height:300,toJSON(){return this;}};};
+globalThis.ResizeObserver=class{constructor(callback){this.callback=callback;}observe(target){this.callback([{target,contentRect:{width:800,height:300}}]);}unobserve(){}disconnect(){}};
