@@ -1,5 +1,7 @@
 # BalanceLab development handoff
 
+Current repository note (2026-11-17): this file describes the imported project and migration history. The authoritative current workflow and verification record are in the outer repository's `docs/development.md` (three directories above this folder). The outer repository now tracks the source and has the GitHub remote; this folder retains a separate imported `.git` history with no remote. Local tests/build and desktop/tablet overview inspection have since passed. Use Git from the outer root; preserve both histories.
+
 ## Current product
 
 The existing application is a static React + Vite + TypeScript frontend for an educational two-wheel self-balancing robot. No backend or cloud service is needed to run it locally.

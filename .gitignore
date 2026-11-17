@@ -1,0 +1,25 @@
+# Dependencies and generated output at any project depth
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+*.log
+.tools/
+
+# Local configuration and credentials (commit only sanitized examples)
+.env
+.env.*
+!.env.example
+!.env.*.example
+.npmrc
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+.aws/
+
+# OS metadata
+.DS_Store
+Thumbs.db
